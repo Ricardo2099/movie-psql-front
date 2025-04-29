@@ -1,23 +1,33 @@
-// Cambia esta URL a la del backend desplegado en Render
+// URL del backend de Render
 const API_URL = "https://pg-restapi-movie.onrender.com/api/movies";
 
 // Función para obtener películas
 async function getMovies() {
-  const response = await fetch(API_URL);
-  const movies = await response.json();
-  const list = document.getElementById("movieList");
-  list.innerHTML = "";
-  movies.forEach(movie => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <div class="movie-info">
-        <strong>${movie.title}</strong> - Dirigida por ${movie.director} - Año ${movie.year} <br> 
-        <em>${movie.synopsis}</em>
-      </div>
-      <button onclick="deleteMovie(${movie.id})">Eliminar</button>
-    `;
-    list.appendChild(li);
-  });
+  try {
+    const response = await fetch(API_URL);
+    if (!response.ok) {
+      throw new Error('Error al obtener películas.');
+    }
+    const movies = await response.json();
+    const list = document.getElementById("movieList");
+    list.innerHTML = "";
+    movies.forEach(movie => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div class="movie-title">${movie.title} (${movie.year})</div>
+        <div class="movie-details">
+          <strong>Director:</strong> ${movie.director} <br>
+          <strong>Sinopsis:</strong> ${movie.synopsis}
+        </div>
+        <div class="button-container">
+          <button onclick="deleteMovie(${movie.id})">Eliminar</button>
+        </div>
+      `;
+      list.appendChild(li);
+    });
+  } catch (error) {
+    alert(error.message);
+  }
 }
 
 // Función para crear película
@@ -27,32 +37,47 @@ async function createMovie() {
   const year = parseInt(document.getElementById("year").value);
   const synopsis = document.getElementById("synopsis").value;
 
-  const response = await fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ title, director, year, synopsis })
-  });
+  if (!title || !director || !year || !synopsis) {
+    alert("Por favor completa todos los campos.");
+    return;
+  }
 
-  if (response.ok) {
-    alert("Película creada exitosamente!");
-    getMovies();
-  } else {
-    alert("Error creando película.");
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ title, director, year, synopsis })
+    });
+
+    if (response.ok) {
+      alert("✅ ¡Película creada exitosamente!");
+      getMovies();
+    } else {
+      throw new Error("❌ Error al crear la película.");
+    }
+  } catch (error) {
+    alert(error.message);
   }
 }
 
 // Función para eliminar película
 async function deleteMovie(id) {
-  const response = await fetch(`${API_URL}/${id}`, {
-    method: "DELETE"
-  });
+  if (!confirm("¿Seguro que deseas eliminar esta película?")) return;
 
-  if (response.ok) {
-    alert("Película eliminada exitosamente!");
-    getMovies(); // Recarga la lista
-  } else {
-    alert("Error eliminando película.");
+  try {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "DELETE"
+    });
+
+    if (response.ok) {
+      alert("✅ ¡Película eliminada exitosamente!");
+      getMovies();
+    } else {
+      throw new Error("❌ Error al eliminar la película.");
+    }
+  } catch (error) {
+    alert(error.message);
   }
 }
