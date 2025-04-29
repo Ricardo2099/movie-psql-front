@@ -1,15 +1,19 @@
 name: deploy-frontend
+
 on:
   push:
-    branches: ["main"]
+    branches: ["master"]  
 
 jobs:
   deploy-frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - run: echo 'Construyendo imagen Frontend...'
-      - run: docker build -t ${{ secrets.DOCKER_USER }}/frontend-restapi-movie:${{ github.sha }} .
+
+      - run: docker build -t ${{ secrets.DOCKER_USER }}/frontend-psql-movie:${{ github.sha }} .
+
       - run: docker images
 
       - name: docker login
@@ -19,4 +23,4 @@ jobs:
         run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
       - name: docker push
-        run: docker push ${{ secrets.DOCKER_USER }}/frontend-restapi-movie:${{ github.sha }}
+        run: docker push ${{ secrets.DOCKER_USER }}/frontend-psql-movie:${{ github.sha }}
