@@ -13,14 +13,16 @@ async function getMovies() {
     movies.forEach(movie => {
       const li = document.createElement("li");
       li.innerHTML = `
-        ${movie.imageUrl ? `<img src="${movie.imageUrl}" alt="Poster de ${movie.title}" class="movie-poster">` : ''}
-        <div class="movie-title">${movie.title} (${movie.year})</div>
-        <div class="movie-details">
-          <strong>Director:</strong> ${movie.director}<br>
-          <strong>Sinopsis:</strong> ${movie.synopsis}
-        </div>
-        <div class="button-container">
-          <button onclick="deleteMovie(${movie.id})">Eliminar</button>
+        ${movie.imageUrl ? `<img src="${encodeURI(movie.imageUrl)}" alt="Poster de ${movie.title}" class="movie-poster" onerror="this.style.display='none'" />` : ''}
+        <div class="movie-content">
+          <div class="movie-title">${movie.title} (${movie.year})</div>
+          <div class="movie-details">
+            <strong>Director:</strong> ${movie.director}<br>
+            <strong>Sinopsis:</strong> ${movie.synopsis}
+          </div>
+          <div class="button-container">
+            <button onclick="deleteMovie(${movie.id})">Eliminar</button>
+          </div>
         </div>
       `;
       list.appendChild(li);
