@@ -11,9 +11,11 @@ async function getMovies() {
     const movies = await response.json();
     const list = document.getElementById("movieList");
     list.innerHTML = "";
+
     movies.forEach(movie => {
       const li = document.createElement("li");
       li.innerHTML = `
+        ${movie.imageUrl ? `<img src="${movie.imageUrl}" alt="Poster de ${movie.title}" style="width:100%; max-height:300px; object-fit:cover; border-radius:8px; margin-bottom:10px;">` : ''}
         <div class="movie-title">${movie.title} (${movie.year})</div>
         <div class="movie-details">
           <strong>Director:</strong> ${movie.director} <br>
