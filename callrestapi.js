@@ -1,13 +1,11 @@
-// URL del backend de Render
 const API_URL = "https://pg-restapi-movie.onrender.com/api/movies";
 
-// Función para obtener películas
+// Obtener películas
 async function getMovies() {
   try {
     const response = await fetch(API_URL);
-    if (!response.ok) {
-      throw new Error('Error al obtener películas.');
-    }
+    if (!response.ok) throw new Error("Error al obtener películas.");
+
     const movies = await response.json();
     const list = document.getElementById("movieList");
     list.innerHTML = "";
@@ -15,10 +13,10 @@ async function getMovies() {
     movies.forEach(movie => {
       const li = document.createElement("li");
       li.innerHTML = `
-        ${movie.imageUrl ? `<img src="${movie.imageUrl}" alt="Poster de ${movie.title}" style="width:100%; max-height:300px; object-fit:cover; border-radius:8px; margin-bottom:10px;">` : ''}
+        ${movie.imageUrl ? `<img src="${movie.imageUrl}" alt="Poster de ${movie.title}" class="movie-poster">` : ''}
         <div class="movie-title">${movie.title} (${movie.year})</div>
         <div class="movie-details">
-          <strong>Director:</strong> ${movie.director} <br>
+          <strong>Director:</strong> ${movie.director}<br>
           <strong>Sinopsis:</strong> ${movie.synopsis}
         </div>
         <div class="button-container">
@@ -32,12 +30,13 @@ async function getMovies() {
   }
 }
 
-// Función para crear película
+// Crear nueva película
 async function createMovie() {
   const title = document.getElementById("title").value;
   const director = document.getElementById("director").value;
   const year = parseInt(document.getElementById("year").value);
   const synopsis = document.getElementById("synopsis").value;
+  const imageUrl = document.getElementById("imageUrl").value;
 
   if (!title || !director || !year || !synopsis) {
     alert("Por favor completa todos los campos.");
@@ -50,7 +49,7 @@ async function createMovie() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ title, director, year, synopsis })
+      body: JSON.stringify({ title, director, year, synopsis, imageUrl })
     });
 
     if (response.ok) {
@@ -64,7 +63,7 @@ async function createMovie() {
   }
 }
 
-// Función para eliminar película
+// Eliminar película
 async function deleteMovie(id) {
   if (!confirm("¿Seguro que deseas eliminar esta película?")) return;
 

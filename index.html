@@ -9,7 +9,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 20px;
-      background: linear-gradient(to right, #141e30, #243b55); /* Fondo azul oscuro degradado */
+      background: linear-gradient(to right, #141e30, #243b55);
       color: #f0f0f0;
     }
 
@@ -85,6 +85,14 @@
       display: flex;
       justify-content: flex-end;
     }
+
+    .movie-poster {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
   </style>
   <script src="callrestapi.js" defer></script>
 </head>
@@ -98,6 +106,7 @@
     <input type="text" id="director" placeholder="Director">
     <input type="number" id="year" placeholder="Año">
     <input type="text" id="synopsis" placeholder="Sinopsis">
+    <input type="text" id="imageUrl" placeholder="URL de la imagen (opcional)">
     <br>
     <button onclick="createMovie()">Agregar Película</button>
     <button onclick="getMovies()">Cargar Películas</button>
